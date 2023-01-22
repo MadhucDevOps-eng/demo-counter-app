@@ -57,6 +57,15 @@ pipeline{
         }
         
     }
+    stage('Quatity gate checking'){
+
+        steps{
+
+            script{
+                waitForQualityGate abortPipeline: false, credentialsId: 'sonar-auth'
+            }
+        }
+    }
         
   }
 

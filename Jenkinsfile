@@ -98,7 +98,8 @@ pipeline{
             script{
 
                 withCredentials([string(credentialsId: 'doc-auth', variable: 'doc-auth')]) {
-                  
+
+                    sh 'docker login -u rishi0310 -p ${doc-auth}'
                     sh 'docker image push tag $JOB_NAME:v1.$BUILD_ID rishi0310/$JOB_NAME:v1.$BUILD_ID'
                     sh 'docker image push tag $JOB_NAME:v1.$BUILD_ID rishi0310/$JOB_NAME:latest'
 

@@ -97,10 +97,10 @@ pipeline{
 
             script{
 
-                withCredentials([usernameColonPassword(credentialsId: 'doc-cred', variable: 'dockerhub-cred')]) {
+                withCredentials([string(credentialsId: 'doc-auth', variable: 'doc-auth')]) {
                   
-                    sh 'docker push tag $JOB_NAME:v1.$BUILD_ID rishi0310/$JOB_NAME:v1.$BUILD_ID'
-                    sh 'docker push tag $JOB_NAME:v1.$BUILD_ID rishi0310/$JOB_NAME:latest'
+                    sh 'docker image push tag $JOB_NAME:v1.$BUILD_ID rishi0310/$JOB_NAME:v1.$BUILD_ID'
+                    sh 'docker image push tag $JOB_NAME:v1.$BUILD_ID rishi0310/$JOB_NAME:latest'
 
 
 

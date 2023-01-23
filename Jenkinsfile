@@ -99,7 +99,7 @@ pipeline{
 
                 withCredentials([usernameColonPassword(credentialsId: 'doc-cred', variable: 'dockerhub-cred')]) {
                  
-                    sh 'docker login -u rishi0310 -p ${dockerhub-cred}' 
+                    sh 'docker login -u rishi0310 -p ${doc-cred}' 
                     sh 'docker push tag $JOB_NAME:v1.$BUILD_ID rishi0310/$JOB_NAME:v1.$BUILD_ID'
                     sh 'docker push tag $JOB_NAME:v1.$BUILD_ID rishi0310/$JOB_NAME:latest'
 

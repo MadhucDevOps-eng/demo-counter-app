@@ -1,6 +1,11 @@
 pipeline{
     
     agent any
+
+     environment {
+        registry = "910589273559.dkr.ecr.ap-south-1.amazonaws.com/myspringboot-repo"
+    }
+
 	tools{
 		maven 'maven'
 	} 
@@ -84,9 +89,9 @@ pipeline{
 
             script{
 
-                sh 'docker image build -t $JOB_NAME:v1.$BUILD_ID .'
-                sh 'docker image tag $JOB_NAME:v1.$BUILD_ID rishi0310/$JOB_NAME:v1.$BUILD_ID'
-                sh 'docker image tag $JOB_NAME:v1.$BUILD_ID rishi0310/$JOB_NAME:latest'
+                sh 'docker.build registry'
+                
+
 
             }
         }
@@ -97,15 +102,11 @@ pipeline{
 
             script{
 
-                withCredentials([string(credentialsId: 'doc-auth', variable: 'doc-auth')]) {
 
-                    sh 'docker login -u rishi0310 -p ${doc-auth}'
-                    sh 'docker image push tag $JOB_NAME:v1.$BUILD_ID rishi0310/$JOB_NAME:v1.$BUILD_ID'
-                    sh 'docker image push tag $JOB_NAME:v1.$BUILD_ID rishi0310/$JOB_NAME:latest'
+                    sh 'aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 910589273559.dkr.ecr.ap-south-1.amazonaws.com'
+                    sh 'docker push 910589273559.dkr.ecr.ap-south-1.amazonaws.com/myspringboot-repo:latest'
+                
 
-
-
-                }
 
             }
         }

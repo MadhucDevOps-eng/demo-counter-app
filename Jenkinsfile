@@ -89,7 +89,8 @@ pipeline{
 
             script{
 
-                sh 'docker.build registry'
+                sh 'docker build -t myspringboot-repo .'
+                sh 'docker tag myspringboot-repo:latest 910589273559.dkr.ecr.ap-south-1.amazonaws.com/myspringboot-repo:latest'
                 
 
 

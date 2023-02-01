@@ -1,0 +1,97 @@
+pipeline{
+
+    agent any
+
+    parameters{
+
+        choice(name:'action',choices:'create\ndestroyekscluster',description:'create/update or destroy the ekscluster')
+
+        string(name:'region',defaultvalue:'demo-cluster',description:'eks cluster name')
+
+        string(name:'region',defaultvalue:'ap-south-1',description:'eks cluster region')
+
+    }
+
+    environment{
+        ACCESS_KEY=
+
+        SECRET_KEY=
+    }
+
+    stages{
+
+        stage('git checkout'){
+
+            steps{
+
+                git branch:'main',url:''
+
+
+            }
+
+        }
+
+        stage('eks connect'){
+
+            steps{
+
+                sh """
+
+                    aws configure set aws_access_key_id "$ACCESS_KEY"
+
+                    aws configure set aws_secret_access_key "$SECRET_KEY"
+
+                    aws configure set region ""
+
+                    aws eks --region ${param.region} update-kubeconfig --name ${params.cluster}
+
+                    """;
+
+             
+
+
+            }
+
+            stage('eks deployments'){
+
+                when{expression {params.action =='create'}}
+
+                steps{
+
+                    script{
+
+                        def apply = false
+
+                        try{
+                            input message:'please conform the apply to initiate the deployments',ok:'ready to apply config'
+
+                            apply =true
+
+                        }
+
+                        catch(err){
+
+                            apply = false
+
+                            currentBuild.result ='UNSTABLE'
+
+                        }
+
+                        if(apply){
+
+                            sh """
+
+                            kubectl apply -f .
+
+                            """;
+                        }
+                        }
+                        }
+                    }
+                }
+            }
+
+
+        }
+    }
+}

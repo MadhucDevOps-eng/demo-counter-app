@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: myservice
+spec:
+  selector:
+    app: myspringbootapp
+  type: LoadBalancer
+  ports:
+  - nodeport: 30036
+    port: 80
+    targetPort: 9099

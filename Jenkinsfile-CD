@@ -121,7 +121,8 @@ pipeline{
                         if(destroy){
                             sh """
                                 kubectl delete -f .
-                                """;
+                                
+                                """ ;
                         }
                     }
                 }

@@ -4,18 +4,18 @@ pipeline{
 
     parameters{
 
-        choice(name:'action',choices:'create\ndestroyekscluster',description:'create/update or destroy the ekscluster')
+        choice(name: 'action',choices:'create\ndestroy\ndestroyekscluster',description:'create/update or destroy the ekscluster')
 
-        string(name:'region',defaultvalue:'demo-cluster',description:'eks cluster name')
+        string(name: 'cluster',defaultvalue:'demo-cluster',description:'Eks cluster name')
 
-        string(name:'region',defaultvalue:'ap-south-1',description:'eks cluster region')
+        string(name: 'region',defaultvalue:'ap-south-1',description:'Eks cluster region')
 
     }
 
     environment{
-        ACCESS_KEY=
+        ACCESS_KEY= crendentials('aws_access_key_id')
 
-        SECRET_KEY=
+        SECRET_KEY= credentials('aws_secret_access_key')
     }
 
     stages{
@@ -43,7 +43,7 @@ pipeline{
 
                     aws configure set region ""
 
-                    aws eks --region ${param.region} update-kubeconfig --name ${params.cluster}
+                    aws eks --region ${params.region} update-kubeconfig --name ${params.cluster}
 
                     """;
 
@@ -54,7 +54,7 @@ pipeline{
 
             stage('eks deployments'){
 
-                when{expression {params.action =='create'}}
+                when{ expression {params.action =='create'}}
 
                 steps{
 
@@ -63,7 +63,7 @@ pipeline{
                         def apply = false
 
                         try{
-                            input message:'please conform the apply to initiate the deployments',ok:'ready to apply config'
+                            input message:'please conform the apply to initiate the deployments', ok:'Ready to apply config'
 
                             apply =true
 
